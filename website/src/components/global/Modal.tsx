@@ -26,11 +26,13 @@ export default function Modal({
             onClose();
          }
       };
+
       if (isOpen) {
          document.addEventListener("keydown", handleEscape);
-         // prevent body scroll when modal is open
+         // Prevent body scroll when modal is open
          document.body.style.overflow = "hidden";
       }
+
       return () => {
          document.removeEventListener("keydown", handleEscape);
          document.body.style.overflow = "unset";
@@ -47,33 +49,34 @@ export default function Modal({
    };
 
    return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center">
+      <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
          {/* backdrop */}
          <div
             className="absolute inset-0 bg-black/50 backdrop-blur-sm"
             onClick={onClose}
+         />
+
+         {/* modal container - MOVED OUTSIDE backdrop */}
+         <div
+            className={`relative w-full bg-white rounded-lg shadow-xl border border-neutral-200 ${sizeClasses[size]} ${className}`}
+            onClick={(e) => e.stopPropagation()} // Prevent backdrop click when clicking modal
          >
-            {/* modal container */}
-            <div
-               className={`relative w-full mx-4 bg-white rounded-lg shadow-xl border border-neutral-200 ${sizeClasses[size]} ${className}`}
-            >
-               {/* header */}
-               {title && (
-                  <div className="flex items-center justify-between p-6 border-b border-neutral-200">
-                     <h2 className="text-xl font-semibold text-neutral-800">
-                        {title}
-                     </h2>
-                     <button
-                        onClick={onClose}
-                        className="text-neutral-400 hover:text-neutral-600 transition-colors p-1 rounded-md hover:bg-neutral-100"
-                     >
-                        <X size={20} />
-                     </button>
-                  </div>
-               )}
-               {/* content */}
-               <div className="p-5">{children}</div>
-            </div>
+            {/* header */}
+            {title && (
+               <div className="flex items-center justify-between p-6 border-b border-neutral-200">
+                  <h2 className="text-xl font-semibold text-neutral-800">
+                     {title}
+                  </h2>
+                  <button
+                     onClick={onClose}
+                     className="text-neutral-400 hover:text-neutral-600 transition-colors p-1 rounded-md hover:bg-neutral-100 cursor-pointer"
+                  >
+                     <X size={20} />
+                  </button>
+               </div>
+            )}
+            {/* content */}
+            <div className="p-5">{children}</div>
          </div>
       </div>
    );
