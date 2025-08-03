@@ -9,7 +9,7 @@ export interface Note {
    id: string;
    text: string;
    sentiment: Sentiment;
-   createdAt: string; // ISO 8601 date string (AWSDateTime format)
+   dateCreated: string; // ISO 8601 date string (AWSDateTime format)
 }
 
 export interface NoteQueryResults {
@@ -18,7 +18,7 @@ export interface NoteQueryResults {
    scannedCount: number;
 }
 
-// for creating new notes (without id and createdAt)
+// for creating new notes (without id and dateCreated)
 export interface CreateNoteInput {
    text: string;
    sentiment: Sentiment;
