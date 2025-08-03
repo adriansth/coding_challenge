@@ -43,6 +43,7 @@ export default function NoteListHeader({
                const isSelected = selectedSentiment === option.value;
                return (
                   <button
+                     key={option.value}
                      className={`flex items-center gap-x-1.5 px-3 py-2 rounded-lg font-medium text-sm transition-all cursor-pointer border border-neutral-300 ${
                         isSelected
                            ? `${option.selectedBg} ${option.selectedText}`
