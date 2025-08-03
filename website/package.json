@@ -9,10 +9,14 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@aws-cdk/aws-appsync-alpha": "^2.59.0-alpha.0",
+    "aws-cdk-lib": "^2.208.0",
+    "constructs": "^10.4.2",
     "lucide-react": "^0.536.0",
     "next": "15.4.5",
     "react": "19.1.0",
-    "react-dom": "19.1.0"
+    "react-dom": "19.1.0",
+    "ulid": "^3.0.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
