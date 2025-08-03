@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { Sentiment } from "@/types/note";
 import sentimentOptions from "@/utils/sentiment-options";
+import { Loader2 } from "lucide-react";
 
 interface CreateNoteFormProps {
    onSubmit: (text: string, sentiment: Sentiment) => Promise<void>;
@@ -133,8 +134,8 @@ export default function CreateNoteForm({
             >
                {isLoading ? (
                   <>
-                     <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin">
-                        Creating...
+                     <div className="w-4 h-4 animate-spin">
+                        <Loader2 size={16} />
                      </div>
                   </>
                ) : (
