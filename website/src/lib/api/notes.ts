@@ -4,13 +4,11 @@ import { Sentiment } from "@/types/note";
 
 export async function createNote(text: string, sentiment: Sentiment) {
    try {
-      console.log("Creating note...", { text, sentiment });
       const result = await graphqlOperation(CREATE_NOTE, {
          text: text.trim(),
          sentiment,
       });
       if (result && result.data && result.data.createNote) {
-         console.log("Note created successfully:", result.data);
          return result.data.createNote;
       }
    } catch (err) {
@@ -25,7 +23,6 @@ export async function getNotes(
    nextToken?: string
 ) {
    try {
-      console.log("Fetching notes...", { sentiment, limit, nextToken });
       const variables: any = { limit };
       if (sentiment) variables.sentiment = sentiment;
       if (nextToken) variables.nextToken = nextToken;

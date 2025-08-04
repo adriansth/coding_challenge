@@ -1,6 +1,5 @@
 "use client";
 import Link from "next/link";
-import { Plus } from "lucide-react";
 import NoteListHeader from "@/components/global/NoteListHeader";
 import { Sentiment } from "@/types/note";
 import { useState } from "react";
@@ -8,7 +7,6 @@ import Modal from "@/components/global/Modal";
 import CreateNoteForm from "@/components/create-note/CreateNoteForm";
 import { createNote, getNotes } from "@/lib/api/notes";
 import toast from "react-hot-toast";
-import AmplifyTest from "@/components/debug/AmplifyTest";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 export default function Home() {
@@ -22,12 +20,7 @@ export default function Home() {
    const [lastCreatedNote, setLastCreatedNote] = useState<any>(null); // for debugging
 
    // fetch notes
-   const {
-      data: notesData,
-      isLoading: isLoadingNotes,
-      error: notesError,
-      refetch: refetchNotes,
-   } = useQuery({
+   const { data: notesData, isLoading: isLoadingNotes } = useQuery({
       queryKey: ["notes", selectedSentiment],
       queryFn: async () => {
          const result = await getNotes(selectedSentiment);
@@ -54,7 +47,7 @@ export default function Home() {
          const newNote = await createNote(text, sentiment);
          return newNote;
       },
-      onSuccess: (newNote) => {
+      onSuccess: () => {
          toast.success("Note created successfully");
          queryClient.invalidateQueries({ queryKey: ["notes"] });
       },
@@ -136,8 +129,6 @@ export default function Home() {
                </div>
             </div>
          </main>
-         {/* debug: amplify */}
-         <AmplifyTest />
          {/* create note modal */}
          <Modal
             isOpen={isCreateNoteModalOpen}
