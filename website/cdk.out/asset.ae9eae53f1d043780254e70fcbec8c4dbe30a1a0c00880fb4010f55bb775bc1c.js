@@ -33,5 +33,6 @@ export function response(ctx) {
       console.error("Create Note Error:", ctx.error);
       util.error(ctx.error.message, ctx.error.type);
    }
+
    return ctx.result;
 }

@@ -1,12 +1,12 @@
-import * as cdk from "aws-cdk-lib";
-import * as dynamodb from "aws-cdk-lib/aws-dynamodb";
-import * as appsync from "aws-cdk-lib/aws-appsync";
-import * as logs from "aws-cdk-lib/aws-logs";
-import { Construct } from "constructs";
+const cdk = require("aws-cdk-lib");
+const dynamodb = require("aws-cdk-lib/aws-dynamodb");
+const appsync = require("aws-cdk-lib/aws-appsync");
+const logs = require("aws-cdk-lib/aws-logs");
 
-export class NotesAppStack extends cdk.Stack {
-   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
+class NotesAppStack extends cdk.Stack {
+   constructor(scope, id, props) {
       super(scope, id, props);
+
       // DynamoDB table for storing notes
       const notesTable = new dynamodb.Table(this, "NotesTable", {
          tableName: "sentiment-notes",
@@ -18,12 +18,15 @@ export class NotesAppStack extends cdk.Stack {
             name: "dateCreated",
             type: dynamodb.AttributeType.STRING,
          },
-         billingMode: dynamodb.BillingMode.PAY_PER_REQUEST, // serverless pricing
-         removalPolicy: cdk.RemovalPolicy.DESTROY, // for development -> change for production
-         pointInTimeRecovery: false,
+         billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
+         removalPolicy: cdk.RemovalPolicy.DESTROY,
+         pointInTimeRecoverySpecification: {
+            pointInTimeRecoveryEnabled: false,
+         },
          deletionProtection: false,
       });
-      // global secondary index for efficient sentiment-based queries
+
+      // Global secondary index
       notesTable.addGlobalSecondaryIndex({
          indexName: "SentimentIndex",
          partitionKey: {
@@ -34,12 +37,15 @@ export class NotesAppStack extends cdk.Stack {
             name: "dateCreated",
             type: dynamodb.AttributeType.STRING,
          },
-         projectionType: dynamodb.ProjectionType.ALL, // include all attributes
+         projectionType: dynamodb.ProjectionType.ALL,
       });
-      // GraphQL API with AppSync
+
+      // GraphQL API
       const api = new appsync.GraphqlApi(this, "NotesApi", {
          name: "sentiment-notes-api",
-         definition: appsync.Definition.fromFile("./backend/schema.graphql"),
+         definition: appsync.Definition.fromFile(
+            "./backend/schema/schema.graphql"
+         ),
          authorizationConfig: {
             defaultAuthorization: {
                authorizationType: appsync.AuthorizationType.API_KEY,
@@ -50,19 +56,20 @@ export class NotesAppStack extends cdk.Stack {
                },
             },
          },
-         xrayEnabled: true, // enable x-ray tracing for monitoring
+         xrayEnabled: true,
          logConfig: {
             fieldLogLevel: appsync.FieldLogLevel.ALL,
             retention: logs.RetentionDays.ONE_WEEK,
          },
       });
+
       // DynamoDB data source
       const notesDataSource = api.addDynamoDbDataSource(
          "NotesDataSource",
          notesTable
       );
-      // QUERY RESOLVERS
-      // get notes (loading from external file)
+
+      // Get Notes Function
       const getNotesFunction = new appsync.AppsyncFunction(
          this,
          "GetNotesFunction",
@@ -71,9 +78,11 @@ export class NotesAppStack extends cdk.Stack {
             api,
             dataSource: notesDataSource,
             code: appsync.Code.fromAsset("./backend/resolvers/getNotes.js"),
+            runtime: appsync.FunctionRuntime.JS_1_0_0,
          }
       );
-      // resolver: connect getNotes query to function
+
+      // Get Notes Resolver
       new appsync.Resolver(this, "GetNotesResolver", {
          api,
          typeName: "Query",
@@ -82,8 +91,8 @@ export class NotesAppStack extends cdk.Stack {
          runtime: appsync.FunctionRuntime.JS_1_0_0,
          pipelineConfig: [getNotesFunction],
       });
-      // MUTATION RESOLVERS
-      // create note (loading from external file)
+
+      // Create Note Function
       const createNoteFunction = new appsync.AppsyncFunction(
          this,
          "CreateNoteFunction",
@@ -95,21 +104,42 @@ export class NotesAppStack extends cdk.Stack {
             runtime: appsync.FunctionRuntime.JS_1_0_0,
          }
       );
-      // OUTPUTS
+
+      // Create Note Resolver
+      new appsync.Resolver(this, "CreateNoteResolver", {
+         api,
+         typeName: "Mutation",
+         fieldName: "createNote",
+         code: appsync.Code.fromAsset("./backend/resolvers/pipeline.js"),
+         runtime: appsync.FunctionRuntime.JS_1_0_0,
+         pipelineConfig: [createNoteFunction],
+      });
+
+      // Outputs
       new cdk.CfnOutput(this, "GraphQLApiUrl", {
          value: api.graphqlUrl,
-         description: "GraphQL API Endpoint API",
+         description: "GraphQL API Endpoint URL",
          exportName: `${this.stackName}-GraphQLApiUrl`,
       });
+
       new cdk.CfnOutput(this, "GraphQLApiKey", {
          value: api.apiKey || "",
          description: "GraphQL API Key for authentication",
+         exportName: `${this.stackName}-GraphQLApiKey`,
+      });
+
+      new cdk.CfnOutput(this, "Region", {
+         value: this.region,
+         description: "AWS Region where resources are deployed",
          exportName: `${this.stackName}-Region`,
       });
-      new cdk.CfnOutput(this, "DynamoDBTableName", {
+
+      new cdk.CfnOutput(this, "DynamoDbTableName", {
          value: notesTable.tableName,
          description: "DynamoDB Table Name for notes storage",
-         exportName: `${this.stackName}-DynamoDBTableName`,
+         exportName: `${this.stackName}-DynamoDbTableName`,
       });
    }
 }
+
+module.exports = { NotesAppStack };

@@ -2,8 +2,9 @@ import { util } from "@aws-appsync/utils";
 
 export function request(ctx) {
    const { sentiment, limit = 10, nextToken } = ctx.arguments;
+
    if (sentiment) {
-      // query by sentiment using global secondary index
+      // query by sentiment using Global Secondary Index
       return {
          operation: "Query",
          index: "SentimentIndex",
@@ -13,7 +14,7 @@ export function request(ctx) {
                ":sentiment": sentiment,
             },
          },
-         scanIndexForward: false, // newest first
+         scanIndexForward: false, // Newest first
          limit,
          nextToken,
       };
@@ -32,6 +33,7 @@ export function response(ctx) {
       console.error("DynamoDB Error:", ctx.error);
       util.error(ctx.error.message, ctx.error.type);
    }
+
    return {
       items: ctx.result.items || [],
       nextToken: ctx.result.nextToken || null,
