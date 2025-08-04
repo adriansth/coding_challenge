@@ -32,7 +32,7 @@ export default function Pagination({
                   key={page}
                   onClick={() => onPageChange(page)}
                   disabled={isLoading}
-                  className={`px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
+                  className={`px-3 py-2 text-sm font-medium rounded-lg transition-colors cursor-pointer ${
                      page === currentPage
                         ? "bg-blue-600 text-white"
                         : "text-nuetral-600 bg-white border border-neutral-300 hover:bg-neutral-50"
