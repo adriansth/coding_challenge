@@ -17,7 +17,8 @@ export default function Home() {
       null
    );
    const [isCreateNoteModalOpen, setIsCreateNoteModalOpen] = useState(false);
-   const [isCreatingNote, setIsCreatingNote] = useState(false);
+   const [isCreatingNote] = useState(false);
+
    // fetch notes
    const { data: notesData, isLoading: isLoadingNotes } = useQuery({
       queryKey: ["notes", selectedSentiment],
@@ -50,7 +51,7 @@ export default function Home() {
          toast.success("Note created successfully");
          queryClient.invalidateQueries({ queryKey: ["notes"] });
       },
-      onError: (err) => {
+      onError: () => {
          toast.error("Failed to create note");
       },
    });
@@ -68,14 +69,11 @@ export default function Home() {
    };
 
    const handleSubmitNote = async (text: string, sentiment: Sentiment) => {
-      setIsCreatingNote(true);
       try {
          await createNoteMutation.mutateAsync({ text, sentiment });
          setIsCreateNoteModalOpen(false);
       } catch (err) {
          throw err; // re-throw so form can handle error
-      } finally {
-         setIsCreatingNote(false);
       }
    };
 
@@ -91,7 +89,7 @@ export default function Home() {
                   selectedSentiment={selectedSentiment}
                   onSentimentChange={handleSentimentChange}
                   onCreateNote={handleCreateNote}
-                  notesCount={0}
+                  notesCount={notesData?.length ?? 0}
                />
                {/* notes will go here */}
                <NoteList notes={notesData} />
