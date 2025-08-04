@@ -94,7 +94,7 @@ export default function Home() {
                   notesCount={0}
                />
                {/* notes will go here */}
-               <NoteList />
+               <NoteList notes={notesData} />
             </div>
          </main>
          {/* create note modal */}
