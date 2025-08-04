@@ -24,12 +24,17 @@ export async function getNotes(
 ) {
    try {
       const variables: any = { limit };
-      if (sentiment) variables.sentiment = sentiment;
       if (nextToken) variables.nextToken = nextToken;
       const result = await graphqlOperation(GET_NOTES, variables);
       if (result && result.data && result.data.getNotes) {
-         console.log("Notes fetched successfully:", result.data);
-         return result.data.getNotes;
+         let items = result.data.getNotes.items || [];
+         if (sentiment) {
+            items = items.filter((note: any) => note.sentiment === sentiment);
+         }
+         return {
+            items,
+            nextToken: result.data.getNotes.nextToken,
+         };
       }
    } catch (err) {
       console.error("Failed to fetch notes:", err);
