@@ -1,0 +1,76 @@
+{
+  "version": "45.0.0",
+  "files": {
+    "2819175352ad1ce0dae768e83fc328fb70fb5f10b4a8ff0ccbcb791f02b0716d": {
+      "displayName": "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/Code",
+      "source": {
+        "path": "asset.2819175352ad1ce0dae768e83fc328fb70fb5f10b4a8ff0ccbcb791f02b0716d",
+        "packaging": "zip"
+      },
+      "destinations": {
+        "current_account-current_region-8cfb6a01": {
+          "bucketName": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}",
+          "objectKey": "2819175352ad1ce0dae768e83fc328fb70fb5f10b4a8ff0ccbcb791f02b0716d.zip",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-file-publishing-role-${AWS::AccountId}-${AWS::Region}"
+        }
+      }
+    },
+    "c3c2df6a3781b5a5a5f8d9fc084c5e452b65eb9315ffe41a105e1862b00eab3c": {
+      "displayName": "GetNotesFunction/Code",
+      "source": {
+        "path": "asset.c3c2df6a3781b5a5a5f8d9fc084c5e452b65eb9315ffe41a105e1862b00eab3c.js",
+        "packaging": "file"
+      },
+      "destinations": {
+        "current_account-current_region-afc7ed1f": {
+          "bucketName": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}",
+          "objectKey": "c3c2df6a3781b5a5a5f8d9fc084c5e452b65eb9315ffe41a105e1862b00eab3c.js",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-file-publishing-role-${AWS::AccountId}-${AWS::Region}"
+        }
+      }
+    },
+    "e5a755fd21ba78a91cad8d487eb20835822b591774110c7f09d39e862f003691": {
+      "displayName": "GetNotesResolver/Code",
+      "source": {
+        "path": "asset.e5a755fd21ba78a91cad8d487eb20835822b591774110c7f09d39e862f003691.js",
+        "packaging": "file"
+      },
+      "destinations": {
+        "current_account-current_region-600348b9": {
+          "bucketName": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}",
+          "objectKey": "e5a755fd21ba78a91cad8d487eb20835822b591774110c7f09d39e862f003691.js",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-file-publishing-role-${AWS::AccountId}-${AWS::Region}"
+        }
+      }
+    },
+    "ae9eae53f1d043780254e70fcbec8c4dbe30a1a0c00880fb4010f55bb775bc1c": {
+      "displayName": "CreateNoteFunction/Code",
+      "source": {
+        "path": "asset.ae9eae53f1d043780254e70fcbec8c4dbe30a1a0c00880fb4010f55bb775bc1c.js",
+        "packaging": "file"
+      },
+      "destinations": {
+        "current_account-current_region-8ab63800": {
+          "bucketName": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}",
+          "objectKey": "ae9eae53f1d043780254e70fcbec8c4dbe30a1a0c00880fb4010f55bb775bc1c.js",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-file-publishing-role-${AWS::AccountId}-${AWS::Region}"
+        }
+      }
+    },
+    "00272dd15d40d6c23d416fe8d3903b66feb2a2f7bc37d7e366a2a17847871025": {
+      "displayName": "SentimentNotesStack Template",
+      "source": {
+        "path": "SentimentNotesStack.template.json",
+        "packaging": "file"
+      },
+      "destinations": {
+        "current_account-current_region-126577c6": {
+          "bucketName": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}",
+          "objectKey": "00272dd15d40d6c23d416fe8d3903b66feb2a2f7bc37d7e366a2a17847871025.json",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-file-publishing-role-${AWS::AccountId}-${AWS::Region}"
+        }
+      }
+    }
+  },
+  "dockerImages": {}
+}

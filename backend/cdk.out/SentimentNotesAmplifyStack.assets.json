@@ -1,0 +1,20 @@
+{
+  "version": "45.0.0",
+  "files": {
+    "99d059548b16aedd89914d9bdf855e6a16000eacbe6b8e0c71ffb88260a70b27": {
+      "displayName": "SentimentNotesAmplifyStack Template",
+      "source": {
+        "path": "SentimentNotesAmplifyStack.template.json",
+        "packaging": "file"
+      },
+      "destinations": {
+        "current_account-current_region-925c950f": {
+          "bucketName": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}",
+          "objectKey": "99d059548b16aedd89914d9bdf855e6a16000eacbe6b8e0c71ffb88260a70b27.json",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-file-publishing-role-${AWS::AccountId}-${AWS::Region}"
+        }
+      }
+    }
+  },
+  "dockerImages": {}
+}

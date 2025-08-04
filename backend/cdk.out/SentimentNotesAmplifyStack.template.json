@@ -1,0 +1,443 @@
+{
+ "Description": "Sentiment Notes - Amplify Hosting Stack",
+ "Resources": {
+  "SentimentNotesAmplifyApp": {
+   "Type": "AWS::Amplify::App",
+   "Properties": {
+    "BuildSpec": "\nversion: 1\nfrontend:\n  phases:\n    preBuild:\n      commands:\n        - cd website\n        - npm ci\n    build:\n      commands:\n        - npm run build\n  artifacts:\n    baseDirectory: website/out\n    files:\n      - '**/*'\n  cache:\n    paths:\n      - website/node_modules/**/*\n      - website/.next/cache/**/*\n",
+    "CustomRules": [
+     {
+      "Source": "/<*>",
+      "Status": "404-200",
+      "Target": "/index.html"
+     }
+    ],
+    "Description": "Sentiment Notes - Pey Coding Challenge using AWS Amplify",
+    "EnvironmentVariables": [
+     {
+      "Name": "NEXT_PUBLIC_AWS_REGION",
+      "Value": {
+       "Ref": "AWS::Region"
+      }
+     },
+     {
+      "Name": "NEXT_PUBLIC_GRAPHQL_ENDPOINT",
+      "Value": {
+       "Fn::ImportValue": "SentimentNotesStack:ExportsOutputFnGetAttNotesApi2FFCBC92GraphQLUrl234EDE91"
+      }
+     },
+     {
+      "Name": "NEXT_PUBLIC_API_KEY",
+      "Value": {
+       "Fn::ImportValue": "SentimentNotesStack:ExportsOutputFnGetAttNotesApisentimentnotesapikeyApiKeyDB1BD1B9ApiKeyC958A8C9"
+      }
+     },
+     {
+      "Name": "AMPLIFY_MONOREPO_APP_ROOT",
+      "Value": "website"
+     },
+     {
+      "Name": "AMPLIFY_DIFF_DEPLOY",
+      "Value": "false"
+     }
+    ],
+    "Name": "sentiment-notes-pey-challenge",
+    "Repository": "https://github.com/adriansth/coding_challenge"
+   },
+   "Metadata": {
+    "aws:cdk:path": "SentimentNotesAmplifyStack/SentimentNotesAmplifyApp"
+   }
+  },
+  "MainBranch": {
+   "Type": "AWS::Amplify::Branch",
+   "Properties": {
+    "AppId": {
+     "Fn::GetAtt": [
+      "SentimentNotesAmplifyApp",
+      "AppId"
+     ]
+    },
+    "BranchName": "main",
+    "Description": "Production branch for Pey Challenge",
+    "EnableAutoBuild": true,
+    "EnablePerformanceMode": false,
+    "EnablePullRequestPreview": false,
+    "Framework": "Next.js - SSG"
+   },
+   "Metadata": {
+    "aws:cdk:path": "SentimentNotesAmplifyStack/MainBranch"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/zPSMzKw0DNQTCwv1k1OydbNyUzSqw4uSUzO1kksL45PzC3IyUyr1Kt2TstzLCjQcU7LcypKzEvOqAUx/UtLCkpLanXy8lNS9bKK9cuMTPQM9AwVs4ozM3WLSvNKMnNT9YIgNABa40IdaQAAAA=="
+   },
+   "Metadata": {
+    "aws:cdk:path": "SentimentNotesAmplifyStack/CDKMetadata/Default"
+   },
+   "Condition": "CDKMetadataAvailable"
+  }
+ },
+ "Outputs": {
+  "AmplifyAppURL": {
+   "Description": "🌍 Live Amplify App URL - This proves you used Amplify!",
+   "Value": {
+    "Fn::Join": [
+     "",
+     [
+      "https://main.",
+      {
+       "Fn::GetAtt": [
+        "SentimentNotesAmplifyApp",
+        "AppId"
+       ]
+      },
+      ".amplifyapp.com"
+     ]
+    ]
+   },
+   "Export": {
+    "Name": "SentimentNotesAmplifyURL"
+   }
+  },
+  "AmplifyAppId": {
+   "Description": "Amplify App ID for verification",
+   "Value": {
+    "Fn::GetAtt": [
+     "SentimentNotesAmplifyApp",
+     "AppId"
+    ]
+   }
+  },
+  "AmplifyConsoleURL": {
+   "Description": "Amplify Console for managing the app",
+   "Value": {
+    "Fn::Join": [
+     "",
+     [
+      "https://",
+      {
+       "Ref": "AWS::Region"
+      },
+      ".console.aws.amazon.com/amplify/home?region=",
+      {
+       "Ref": "AWS::Region"
+      },
+      "#/",
+      {
+       "Fn::GetAtt": [
+        "SentimentNotesAmplifyApp",
+        "AppId"
+       ]
+      }
+     ]
+    ]
+   }
+  },
+  "AmplifyService": {
+   "Description": "✅ This deployment uses AWS Amplify as required by challenge",
+   "Value": "AWS Amplify Hosting"
+  }
+ },
+ "Conditions": {
+  "CDKMetadataAvailable": {
+   "Fn::Or": [
+    {
+     "Fn::Or": [
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "af-south-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-east-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-northeast-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-northeast-2"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-northeast-3"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-south-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-south-2"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-southeast-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-southeast-2"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-southeast-3"
+       ]
+      }
+     ]
+    },
+    {
+     "Fn::Or": [
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-southeast-4"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ca-central-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ca-west-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "cn-north-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "cn-northwest-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-central-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-central-2"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-north-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-south-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-south-2"
+       ]
+      }
+     ]
+    },
+    {
+     "Fn::Or": [
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-west-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-west-2"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-west-3"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "il-central-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "me-central-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "me-south-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "sa-east-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "us-east-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "us-east-2"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "us-west-1"
+       ]
+      }
+     ]
+    },
+    {
+     "Fn::Equals": [
+      {
+       "Ref": "AWS::Region"
+      },
+      "us-west-2"
+     ]
+    }
+   ]
+  }
+ },
+ "Parameters": {
+  "BootstrapVersion": {
+   "Type": "AWS::SSM::Parameter::Value<String>",
+   "Default": "/cdk-bootstrap/hnb659fds/version",
+   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Rules": {
+  "CheckBootstrapVersion": {
+   "Assertions": [
+    {
+     "Assert": {
+      "Fn::Not": [
+       {
+        "Fn::Contains": [
+         [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+         ],
+         {
+          "Ref": "BootstrapVersion"
+         }
+        ]
+       }
+      ]
+     },
+     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+    }
+   ]
+  }
+ }
+}
