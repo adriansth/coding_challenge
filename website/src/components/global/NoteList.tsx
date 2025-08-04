@@ -1,6 +1,11 @@
 import NoteCard from "@/components/global/NoteCard";
 
-export default function NoteList({ notes }) {
+interface NoteListProps {
+   notes: any[];
+   onNoteClick: (note: any) => void;
+}
+
+export default function NoteList({ notes, onNoteClick }: NoteListProps) {
    return (
       <div className="w-full min-h-[400px] bg-white/50 rounded-lg border-white/60 p-5 backdrop-blur-sm">
          {notes && notes?.length === 0 ? (
@@ -11,7 +16,15 @@ export default function NoteList({ notes }) {
          ) : (
             <div className="w-full flex flex-col gap-y-2">
                {notes &&
-                  notes?.map((note) => <NoteCard key={note.id} note={note} />)}
+                  notes?.map((note) => (
+                     <NoteCard
+                        key={note.id}
+                        note={note}
+                        onClick={
+                           onNoteClick ? () => onNoteClick(note) : undefined
+                        }
+                     />
+                  ))}
             </div>
          )}
       </div>

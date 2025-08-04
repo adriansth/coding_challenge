@@ -9,6 +9,7 @@ import Header from "@/components/global/Header";
 import NoteListHeader from "@/components/global/NoteListHeader";
 import NoteList from "@/components/global/NoteList";
 import CreateNoteForm from "@/components/create-note/CreateNoteForm";
+import NoteView from "@/components/view-note/NoteView";
 
 export default function Home() {
    const queryClient = useQueryClient();
@@ -18,6 +19,8 @@ export default function Home() {
    );
    const [isCreateNoteModalOpen, setIsCreateNoteModalOpen] = useState(false);
    const [isCreatingNote] = useState(false);
+   const [selectedNote, setSelectedNote] = useState<any>(null);
+   const [isNoteViewModalOpen, setIsNoteViewModalOpen] = useState(false);
 
    // fetch notes
    const { data: notesData, isLoading: isLoadingNotes } = useQuery({
@@ -68,6 +71,16 @@ export default function Home() {
       setIsCreateNoteModalOpen(false);
    };
 
+   const handleNoteClick = (note: any) => {
+      setSelectedNote(note);
+      setIsNoteViewModalOpen(true);
+   };
+
+   const handleCloseNoteView = () => {
+      setIsNoteViewModalOpen(false);
+      setSelectedNote(null);
+   };
+
    const handleSubmitNote = async (text: string, sentiment: Sentiment) => {
       try {
          await createNoteMutation.mutateAsync({ text, sentiment });
@@ -92,7 +105,7 @@ export default function Home() {
                   notesCount={notesData?.length ?? 0}
                />
                {/* notes will go here */}
-               <NoteList notes={notesData} />
+               <NoteList notes={notesData} onNoteClick={handleNoteClick} />
             </div>
          </main>
          {/* create note modal */}
@@ -107,6 +120,17 @@ export default function Home() {
                onCancel={handleCloseModal}
                isLoading={isCreatingNote}
             />
+         </Modal>
+         {/* note view modal */}
+         <Modal
+            isOpen={isNoteViewModalOpen}
+            onClose={handleCloseNoteView}
+            title="Note Details"
+            size="lg"
+         >
+            {selectedNote && (
+               <NoteView note={selectedNote} onClose={handleCloseNoteView} />
+            )}
          </Modal>
       </div>
    );

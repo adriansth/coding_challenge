@@ -8,9 +8,10 @@ interface NoteCardProps {
       sentiment: string;
       dateCreated: string;
    };
+   onClick?: () => void;
 }
 
-export default function NoteCard({ note }: NoteCardProps) {
+export default function NoteCard({ note, onClick }: NoteCardProps) {
    // find the sentiment option that matches the note's sentiment
    const sentimentOption = sentimentOptions.find(
       (option) => option.value === note.sentiment
@@ -23,9 +24,14 @@ export default function NoteCard({ note }: NoteCardProps) {
    const currentOption = sentimentOption || fallbackOption;
 
    return (
-      <div className="bg-white border border-neutral-200 p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+      <button
+         className={`bg-white border border-neutral-200 p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow ${
+            onClick ? "cursor-pointer hover:border-blue-300" : ""
+         }`}
+         onClick={onClick}
+      >
          <div className="flex items-start justify-between gap-3">
-            <span className="text-neutral-800 font-medium flex-1 leading-relaxed">
+            <span className="text-neutral-800 font-medium flex-1 leading-relaxed text-start">
                {truncateText(note.text, 100)}
             </span>
 
@@ -53,6 +59,6 @@ export default function NoteCard({ note }: NoteCardProps) {
                )}
             </div>
          )}
-      </div>
+      </button>
    );
 }
