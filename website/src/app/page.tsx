@@ -6,6 +6,8 @@ import { Sentiment } from "@/types/note";
 import { useState } from "react";
 import Modal from "@/components/global/Modal";
 import CreateNoteForm from "@/components/create-note/CreateNoteForm";
+import { createNote } from "@/lib/api/notes";
+import toast from "react-hot-toast";
 
 export default function Home() {
    const [selectedSentiment, setSelectedSentiment] = useState<Sentiment | null>(
@@ -13,6 +15,7 @@ export default function Home() {
    );
    const [isCreateNoteModalOpen, setIsCreateNoteModalOpen] = useState(false);
    const [isCreatingNote, setIsCreatingNote] = useState(false);
+   const [lastCreatedNote, setLastCreatedNote] = useState<any>(null); // for debugging
 
    const handleSentimentChange = (sentiment: Sentiment | null) => {
       setSelectedSentiment(sentiment);
@@ -30,12 +33,10 @@ export default function Home() {
    const handleSubmitNote = async (text: string, sentiment: Sentiment) => {
       setIsCreatingNote(true);
       try {
-         await new Promise((resolve) => setTimeout(resolve, 1500));
-         console.log("Creating note:", { text, sentiment });
-         // TODO: replace with actual API call
-         // await createNote({ text, sentiment });
-         setIsCreateNoteModalOpen(false); // close modal on success
-         // TODO: refresh note list or add to local state
+         const newNote = await createNote(text, sentiment);
+         setLastCreatedNote(newNote);
+         setIsCreateNoteModalOpen(false);
+         toast.success("Note created successfully!");
       } catch (err) {
          console.error("Failed to create note:", err);
          throw err; // re-throw so form can handle error
