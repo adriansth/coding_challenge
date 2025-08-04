@@ -1,13 +1,14 @@
 "use client";
-import NoteListHeader from "@/components/global/NoteListHeader";
-import { Sentiment } from "@/types/note";
 import { useState } from "react";
-import Modal from "@/components/global/Modal";
-import CreateNoteForm from "@/components/create-note/CreateNoteForm";
-import { createNote, getNotes } from "@/lib/api/notes";
-import toast from "react-hot-toast";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import toast from "react-hot-toast";
+import { Sentiment } from "@/types/note";
+import { createNote, getNotes } from "@/lib/api/notes";
+import Modal from "@/components/global/Modal";
 import Header from "@/components/global/Header";
+import NoteListHeader from "@/components/global/NoteListHeader";
+import NoteList from "@/components/global/NoteList";
+import CreateNoteForm from "@/components/create-note/CreateNoteForm";
 
 export default function Home() {
    const queryClient = useQueryClient();
@@ -17,8 +18,6 @@ export default function Home() {
    );
    const [isCreateNoteModalOpen, setIsCreateNoteModalOpen] = useState(false);
    const [isCreatingNote, setIsCreatingNote] = useState(false);
-   const [lastCreatedNote, setLastCreatedNote] = useState<any>(null); // for debugging
-
    // fetch notes
    const { data: notesData, isLoading: isLoadingNotes } = useQuery({
       queryKey: ["notes", selectedSentiment],
@@ -95,14 +94,7 @@ export default function Home() {
                   notesCount={0}
                />
                {/* notes will go here */}
-               <div className="w-full min-h-[400px] bg-white/50 rounded-lg border-white/60 p-5 backdrop-blur-sm">
-                  <div className="text-center text-neutral-600">
-                     <p className="font-medium mb-2">No notes yet.</p>
-                     <p className="text-sm">
-                        Create your first note to get started!
-                     </p>
-                  </div>
-               </div>
+               <NoteList />
             </div>
          </main>
          {/* create note modal */}
