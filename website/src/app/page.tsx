@@ -6,10 +6,14 @@ import { Sentiment } from "@/types/note";
 import { useState } from "react";
 import Modal from "@/components/global/Modal";
 import CreateNoteForm from "@/components/create-note/CreateNoteForm";
-import { createNote } from "@/lib/api/notes";
+import { createNote, getNotes } from "@/lib/api/notes";
 import toast from "react-hot-toast";
+import AmplifyTest from "@/components/debug/AmplifyTest";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 export default function Home() {
+   const queryClient = useQueryClient();
+
    const [selectedSentiment, setSelectedSentiment] = useState<Sentiment | null>(
       null
    );
@@ -17,9 +21,50 @@ export default function Home() {
    const [isCreatingNote, setIsCreatingNote] = useState(false);
    const [lastCreatedNote, setLastCreatedNote] = useState<any>(null); // for debugging
 
+   // fetch notes
+   const {
+      data: notesData,
+      isLoading: isLoadingNotes,
+      error: notesError,
+      refetch: refetchNotes,
+   } = useQuery({
+      queryKey: ["notes", selectedSentiment],
+      queryFn: async () => {
+         const result = await getNotes(selectedSentiment);
+         if (result && result.items) {
+            console.log(result.items);
+            return result.items;
+         } else {
+            return [];
+         }
+      },
+      staleTime: 5 * 60 * 1000, // consider data as fresh for 5 min
+      gcTime: 10 * 60 * 1000, // keep in cache for 10 min
+   });
+
+   // mutation for creating notes
+   const createNoteMutation = useMutation({
+      mutationFn: async ({
+         text,
+         sentiment,
+      }: {
+         text: string;
+         sentiment: Sentiment;
+      }) => {
+         const newNote = await createNote(text, sentiment);
+         return newNote;
+      },
+      onSuccess: (newNote) => {
+         toast.success("Note created successfully");
+         queryClient.invalidateQueries({ queryKey: ["notes"] });
+      },
+      onError: (err) => {
+         toast.error("Failed to create note");
+      },
+   });
+
    const handleSentimentChange = (sentiment: Sentiment | null) => {
       setSelectedSentiment(sentiment);
-      console.log("Selected sentiment:", sentiment);
    };
 
    const handleCreateNote = () => {
@@ -33,12 +78,9 @@ export default function Home() {
    const handleSubmitNote = async (text: string, sentiment: Sentiment) => {
       setIsCreatingNote(true);
       try {
-         const newNote = await createNote(text, sentiment);
-         setLastCreatedNote(newNote);
+         await createNoteMutation.mutateAsync({ text, sentiment });
          setIsCreateNoteModalOpen(false);
-         toast.success("Note created successfully!");
       } catch (err) {
-         console.error("Failed to create note:", err);
          throw err; // re-throw so form can handle error
       } finally {
          setIsCreatingNote(false);
@@ -94,6 +136,8 @@ export default function Home() {
                </div>
             </div>
          </main>
+         {/* debug: amplify */}
+         <AmplifyTest />
          {/* create note modal */}
          <Modal
             isOpen={isCreateNoteModalOpen}
