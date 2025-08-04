@@ -10,6 +10,7 @@ import NoteListHeader from "@/components/global/NoteListHeader";
 import NoteList from "@/components/global/NoteList";
 import CreateNoteForm from "@/components/create-note/CreateNoteForm";
 import NoteView from "@/components/view-note/NoteView";
+import NotesLoadingState from "@/components/global/NotesLoadingState";
 
 export default function Home() {
    const queryClient = useQueryClient();
@@ -105,7 +106,11 @@ export default function Home() {
                   notesCount={notesData?.length ?? 0}
                />
                {/* notes will go here */}
-               <NoteList notes={notesData} onNoteClick={handleNoteClick} />
+               {isLoadingNotes ? (
+                  <NotesLoadingState selectedSentiment={selectedSentiment} />
+               ) : (
+                  <NoteList notes={notesData} onNoteClick={handleNoteClick} />
+               )}
             </div>
          </main>
          {/* create note modal */}
