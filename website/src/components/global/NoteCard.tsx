@@ -1,4 +1,5 @@
 import sentimentOptions from "@/utils/sentiment-options";
+import { truncateText } from "@/utils/strings";
 
 interface NoteCardProps {
    note: {
@@ -25,7 +26,7 @@ export default function NoteCard({ note }: NoteCardProps) {
       <div className="bg-white border border-neutral-200 p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow">
          <div className="flex items-start justify-between gap-3">
             <span className="text-neutral-800 font-medium flex-1 leading-relaxed">
-               {note.text}
+               {truncateText(note.text, 100)}
             </span>
 
             {/* sentiment badge */}
