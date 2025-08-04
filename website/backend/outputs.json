@@ -1,0 +1,8 @@
+{
+  "SentimentNotesStack": {
+    "DynamoDbTableName": "sentiment-notes",
+    "GraphQLApiUrl": "https://rwh26ppqsrcunp45ivcbyhn36y.appsync-api.us-east-1.amazonaws.com/graphql",
+    "GraphQLApiKey": "da2-au2lzabdrvh5zarba54xnnlade",
+    "Region": "us-east-1"
+  }
+}
