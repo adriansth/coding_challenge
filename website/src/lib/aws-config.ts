@@ -6,7 +6,7 @@ let isConfigured = false;
 export const configureAmplify = () => {
    // only run on client side
    if (typeof window === "undefined") {
-      console.log("🚫 Server side detected, skipping Amplify config");
+      console.log("Server side detected, skipping Amplify config");
       return;
    }
 
@@ -55,7 +55,7 @@ export const configureAmplify = () => {
       Amplify.configure(awsconfig);
       isConfigured = true;
    } catch (error) {
-      console.error("❌ AWS Configuration failed:", error);
+      console.error("AWS Configuration failed:", error);
       throw error;
    }
 };

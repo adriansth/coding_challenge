@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState } from "react";
 import { Sentiment } from "@/types/note";
 import sentimentOptions from "@/utils/sentiment-options";

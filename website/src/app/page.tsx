@@ -14,7 +14,10 @@ import NotesLoadingState from "@/components/global/NotesLoadingState";
 
 export default function Home() {
    const queryClient = useQueryClient();
+   const NOTES_PER_PAGE = 10;
 
+   const [currentPage, setCurrentPage] = useState(1);
+   const [pageTokens, setPageTokens] = useState<string[]>([]);
    const [selectedSentiment, setSelectedSentiment] = useState<Sentiment | null>(
       null
    );
@@ -24,21 +27,32 @@ export default function Home() {
    const [isNoteViewModalOpen, setIsNoteViewModalOpen] = useState(false);
 
    // fetch notes
-   const { data: notesData, isLoading: isLoadingNotes } = useQuery({
-      queryKey: ["notes", selectedSentiment],
+   const { data: notesResponse, isLoading: isLoadingNotes } = useQuery({
+      queryKey: ["notes", selectedSentiment, currentPage],
       queryFn: async () => {
-         const result = await getNotes(selectedSentiment);
-         if (result && result.items) {
-            console.log(result.items);
-            return result.items;
-         } else {
-            return [];
+         const tokenIndex = currentPage - 2;
+         const nextToken = tokenIndex >= 0 ? pageTokens[tokenIndex] : null;
+         const result = await getNotes(
+            selectedSentiment,
+            NOTES_PER_PAGE,
+            nextToken
+         );
+         if (result?.nextToken && !pageTokens.includes(result.nextToken)) {
+            setPageTokens((prev) => {
+               const newTokens = [...prev];
+               newTokens[currentPage - 1] = result.nextToken!;
+               return newTokens;
+            });
          }
+         return result;
       },
       staleTime: 5 * 60 * 1000, // consider data as fresh for 5 min
       gcTime: 10 * 60 * 1000, // keep in cache for 10 min
    });
 
+   const notesData = notesResponse?.items || [];
+   const hasNextPage = !!notesResponse?.nextToken;
+   const totalPages = hasNextPage ? currentPage + 1 : currentPage;
    // mutation for creating notes
    const createNoteMutation = useMutation({
       mutationFn: async ({
@@ -53,6 +67,8 @@ export default function Home() {
       },
       onSuccess: () => {
          toast.success("Note created successfully");
+         setCurrentPage(1);
+         setPageTokens([]);
          queryClient.invalidateQueries({ queryKey: ["notes"] });
       },
       onError: () => {
@@ -62,6 +78,12 @@ export default function Home() {
 
    const handleSentimentChange = (sentiment: Sentiment | null) => {
       setSelectedSentiment(sentiment);
+      setCurrentPage(1);
+      setPageTokens([]);
+   };
+
+   const handlePageChange = (page: number) => {
+      setCurrentPage(page);
    };
 
    const handleCreateNote = () => {
@@ -109,7 +131,14 @@ export default function Home() {
                {isLoadingNotes ? (
                   <NotesLoadingState selectedSentiment={selectedSentiment} />
                ) : (
-                  <NoteList notes={notesData} onNoteClick={handleNoteClick} />
+                  <NoteList
+                     notes={notesData}
+                     onNoteClick={handleNoteClick}
+                     currentPage={currentPage}
+                     totalPages={totalPages}
+                     onPageChange={handlePageChange}
+                     isLoading={isLoadingNotes}
+                  />
                )}
             </div>
          </main>

@@ -20,7 +20,7 @@ export async function createNote(text: string, sentiment: Sentiment) {
 export async function getNotes(
    sentiment?: Sentiment | null,
    limit = 10,
-   nextToken?: string
+   nextToken?: string | null
 ) {
    try {
       const variables: any = { limit };
