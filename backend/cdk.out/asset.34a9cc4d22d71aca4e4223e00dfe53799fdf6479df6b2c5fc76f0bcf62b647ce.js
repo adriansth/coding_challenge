@@ -24,6 +24,7 @@ export function request(ctx) {
     attributeValues: {
       text: util.dynamodb.toDynamoDB(ctx.arguments.text.trim()),
       sentiment: util.dynamodb.toDynamoDB(ctx.arguments.sentiment),
+      type: util.dynamodb.toDynamoDB("NOTE"),
     },
   };
 }

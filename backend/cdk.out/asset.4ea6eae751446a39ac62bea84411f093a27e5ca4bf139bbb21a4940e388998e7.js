@@ -18,10 +18,18 @@ export function request(ctx) {
       nextToken,
     };
   } else {
+    ctx.stash.isAllNotesQuery = true;
     return {
-      operation: "Scan",
-      limit,
-      nextToken,
+      operation: "Query",
+      index: "SentimentIndex",
+      query: {
+        expression: "sentiment = :sentiment",
+        expressionValues: {
+          ":sentiment": "happy",
+        },
+      },
+      scanIndexForward: false,
+      limit: limit * 2,
     };
   }
 }
@@ -29,6 +37,9 @@ export function request(ctx) {
 export function response(ctx) {
   if (ctx.error) {
     util.error(ctx.error.message, ctx.error.type);
+  }
+  if (!ctx.stash.isAllNotesQuery) {
+    return ctx.result;
   }
   return ctx.result;
 }

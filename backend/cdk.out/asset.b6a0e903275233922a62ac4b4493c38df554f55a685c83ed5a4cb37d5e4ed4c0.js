@@ -4,6 +4,7 @@ export function request(ctx) {
   const { sentiment, limit = 10, nextToken } = ctx.arguments;
 
   if (sentiment) {
+    // query by sentiment using SentimentIndex (already sorted by date)
     return {
       operation: "Query",
       index: "SentimentIndex",
@@ -13,13 +14,25 @@ export function request(ctx) {
           ":sentiment": sentiment,
         },
       },
-      scanIndexForward: false,
+      scanIndexForward: false, // Newest first
       limit,
       nextToken,
     };
   } else {
+    // query all notes sorted by date using DateIndex
     return {
-      operation: "Scan",
+      operation: "Query",
+      index: "DateIndex",
+      query: {
+        expression: "#type = :type",
+        expressionNames: {
+          "#type": "type",
+        },
+        expressionValues: {
+          ":type": "NOTE",
+        },
+      },
+      scanIndexForward: false, // newest first
       limit,
       nextToken,
     };

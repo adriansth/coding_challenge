@@ -10,7 +10,6 @@ export async function graphqlOperation(query: string, variables?: any) {
       })) as any;
       return result;
    } catch (err) {
-      console.error("GraphQL operation failed: ", err);
       throw err;
    }
 }

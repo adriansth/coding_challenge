@@ -12,7 +12,6 @@ export async function createNote(text: string, sentiment: Sentiment) {
          return result.data.createNote;
       }
    } catch (err) {
-      console.error("Failed to create note:", err);
       throw new Error("Failed to create note. Please try again.");
    }
 }
@@ -37,7 +36,6 @@ export async function getNotes(
          };
       }
    } catch (err) {
-      console.error("Failed to fetch notes:", err);
       throw new Error("Failed to fetch notes. Please try again.");
    }
 }
